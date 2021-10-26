@@ -34,13 +34,14 @@ def map_goes_NOAA_ARR_with_HARPNUM():
 
     #Sort DF based on HARPNUM
     final_df = df3.sort_values(by=['DEF_HARPNUM'])
+    final_df['DEF_HARPNUM']=final_df['DEF_HARPNUM'].astype(int)
     # print(df3.head)
 
     #Dump final_df to csv
     final_df.to_csv(r'../label_source/new_label_source.csv', index=False, header=True, columns=['DEF_HARPNUM', 'NOAA_ARS', 'start_time', 'goes_class'])
 
-    def main():
-        map_goes_NOAA_ARR_with_HARPNUM()
+def main():
+    map_goes_NOAA_ARR_with_HARPNUM()
 
-    if __name__ == "__main__":
-        main()
+if __name__ == "__main__":
+    main()
