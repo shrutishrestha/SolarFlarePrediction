@@ -1,1 +1,1 @@
-# SolarFlarePrediction
+# Harp-based SolarFlarePrediction
