@@ -20,25 +20,29 @@ def map_goes_NOAA_ARR_with_HARPNUM():
 
     #Unstack NOAA_ARS per HARPNUM
     harpdf = df.explode('NOAA_ARS')
+    # print(len(harpdf))
+    harpdf = harpdf.drop_duplicates() 
+    # print(len(harpdf))
 
     #DROP ROWS with nan for NOAA_ARS
     dataframe = dataframe[dataframe['NOAA_ARS'].notna()]
     harpdf = harpdf[harpdf['NOAA_ARS'].notna()]
+    # print(len(harpdf))
 
     #Convert Datatype for NOAA_ARS to int
     dataframe['NOAA_ARS']=dataframe['NOAA_ARS'].astype(int)
     harpdf['NOAA_ARS']=harpdf['NOAA_ARS'].astype(int)
 
     #Merge GOES file and NOAA_ARS to HARPNUM file on NOAA_ARS
-    df3 = dataframe.merge(harpdf, on=['NOAA_ARS'])
+    df3 = dataframe.merge(harpdf, on=['NOAA_ARS'], how='inner')
 
     #Sort DF based on HARPNUM
     final_df = df3.sort_values(by=['DEF_HARPNUM'])
     final_df['DEF_HARPNUM']=final_df['DEF_HARPNUM'].astype(int)
-    # print(df3.head)
+    print(len(final_df), len(harpdf), len(dataframe))
 
     #Dump final_df to csv
-    final_df.to_csv(r'../label_source/new_label_source.csv', index=False, header=True, columns=['DEF_HARPNUM', 'NOAA_ARS', 'start_time', 'goes_class'])
+    final_df.to_csv(r'../label_source/harp2noaaar2goesclass.csv', index=False, header=True, columns=['DEF_HARPNUM', 'NOAA_ARS', 'start_time', 'goes_class'])
 
 def main():
     map_goes_NOAA_ARR_with_HARPNUM()
