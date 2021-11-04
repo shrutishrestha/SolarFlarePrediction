@@ -65,15 +65,15 @@ def create_CVDataset(df):
         print(train['goes_class'].value_counts())
         print(val['goes_class'].value_counts())
         # Dumping the dataframe into CSV with label as Date and goes_class as intensity
-        train.to_csv(r'../harp_label/M_Bin_Fold{i}_train.csv'.format(i=i+1), index=False, header=True, columns=['filename', 'goes_class'])
-        val.to_csv(r'../harp_label/M_Bin_Fold{i}_val.csv'.format(i=i+1), index=False, header=True, columns=['filename', 'goes_class'])
+        train.to_csv(r'../harp_label/M_Bin_Fold_update{i}_train.csv'.format(i=i+1), index=False, header=True, columns=['filename', 'goes_class'])
+        val.to_csv(r'../harp_label/M_Bin_Fold_update{i}_val.csv'.format(i=i+1), index=False, header=True, columns=['filename', 'goes_class'])
 
 #Load Harp-to-active region associated source for Goes Flare X-ray Flux 
-data = pd.read_csv (r'../harp_label/bi_daily_label.csv')
+data = pd.read_csv (r'../harp_label/bi_daily_label_update.csv')
 df = pd.DataFrame(data, columns= ['harpnum','timestamp', 'goes_class'])
 count_class(df)
 temp_df = binarize(df, 'M')
-# label_df = date_to_filename(temp_df)
+label_df = date_to_filename(temp_df)
 create_CVDataset(temp_df)
-# print(label_df['goes_class'].value_counts())
-# label_df.to_csv(r'../harp_label/final_label.csv', index=False, header=True, columns=['harpnum', 'timestamp', 'filename', 'goes_class'])
+print(label_df['goes_class'].value_counts())
+label_df.to_csv(r'../harp_label/final_label_update.csv', index=False, header=True, columns=['harpnum', 'timestamp', 'filename', 'goes_class'])

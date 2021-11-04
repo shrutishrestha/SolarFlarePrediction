@@ -5,7 +5,7 @@ pd.options.mode.chained_assignment = None
 def bi_daily_obs(df, pws, pwe):
     #Datetime 
     df['start'] = pd.to_datetime(df['start_time'], format='%Y-%m-%d %H:%M:%S')
-    stop = pd.to_datetime(df['start_time'], format='%Y-%m-%d %H:%M:%S').max().normalize() + pd.Timedelta(hours=24)
+    stop = pd.to_datetime(df['Maximum'], format='%Y-%m-%d %H:%M:%S').max().normalize() + pd.Timedelta(hours=24) - pd.Timedelta(seconds=1)
 
     #New Empty DF
     emp = pd.DataFrame()
@@ -35,8 +35,8 @@ def bi_daily_obs(df, pws, pwe):
 
 
 #Load Harp-to-active region associated source for Goes Flare X-ray Flux 
-data = pd.read_csv (r'../label_source/harp2noaaar2goesclass.csv')
-df = pd.DataFrame(data, columns= ['DEF_HARPNUM','NOAA_ARS', 'start_time', 'goes_class'])
+data = pd.read_csv (r'../label_source/harp2noaaar2goesclass_update.csv')
+df = pd.DataFrame(data, columns= ['DEF_HARPNUM','NOAA_ARS', 'start_time', 'goes_class', 'Minimum', 'Maximum'])
 
 #Get all harpnum
 harp_num = df['DEF_HARPNUM'].unique()
@@ -49,7 +49,7 @@ emp = pd.DataFrame(columns=['harpnum', 'timestamp', 'goes_class'])
 for p in output_dfs:
     sub_df = None
     sub_df = output_dfs[p]
-    pws = pd.to_datetime(sub_df['start_time'], format='%Y-%m-%d').min().normalize()
+    pws = pd.to_datetime(sub_df['Minimum'], format='%Y-%m-%d').min().normalize()
     pwe = pws + pd.Timedelta(hours=24) - pd.Timedelta(seconds=1)
     # print(pws, pwe)
     out_df = None
@@ -57,4 +57,4 @@ for p in output_dfs:
     emp = pd.concat([emp, out_df], ignore_index=True)
 
 # print(emp.head(100))
-emp.to_csv(r'../harp_label/bi_daily_label.csv', index=False, header=True, columns=['harpnum', 'timestamp', 'goes_class'])
+emp.to_csv(r'../harp_label/bi_daily_label_update.csv', index=False, header=True, columns=['harpnum', 'timestamp', 'goes_class'])
